@@ -99,6 +99,12 @@ jobs:
       if: github.ref == 'refs/heads/master' && github.event_name == 'push'
       run: terraform apply -auto-approve
       
+    - name:   Show status file content after apply
+      run: cat status.txt
+      
     - name: Terraform Destroy
       run: terraform destroy -auto-approve
+      
+    - name:    Show status file content after destroy
+      run:    cat status.txt
 
