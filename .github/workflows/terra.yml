@@ -7,6 +7,32 @@ on:
   pull_request:
 
 jobs:
+  bridgecrew:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run Bridgecrew 
+      id: Bridgecrew
+      uses: bridgecrewio/bridgecrew-action@master
+      with:
+        api-key: ${{ secrets.API_KEY }}
+        soft_fail: true  #This line will successfull run the code without error.
+      env:  
+        GITHUB_REPOSITORY: ${{ github.repository }}
+          #GITHUB_REF: ${{ github.ref }}    #It refer to the git hub head
+         # GITHUB_SHA: ${{ github.sha }}    # It will show Sha og last commit which triggered this workflow. You can verify that via cmnd-git log in git bash.
+          #GITHUB_SERVER_URL: $GITHUB_SERVER_URL  # It will return the server url. 
+    - name: Expose report     //It is use to export the scan result in sarif form.
+      uses: actions/upload-artifact@v2
+      with:
+        name: SARIF results
+        path: results.sarif
+    # Uploads results.sarif to GitHub repository using the upload-sarif action
+    - uses: github/codeql-action/upload-sarif@v1
+      with:
+        # Path to SARIF file relative to the root of the repository
+         sarif_file: results.sarif
+         
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
