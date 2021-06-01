@@ -34,6 +34,7 @@ jobs:
          sarif_file: results.sarif
          
   terraform:
+    needs: bridgecrew
     name: 'Terraform'
     runs-on: ubuntu-latest
     environment: production
